@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Advice Builder App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 5px; }
+        .welcome-box {
+            background-color: #e8f4fd;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+        .step {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #bdc3c7;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { border-color: #3498db; background: #f7fafd; }
+        .option-btn.selected { background: #3498db; color: white; border-color: #2980b9; }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea:focus, input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .hint { font-size: 0.85em; color: #7f8c8d; margin-top: 5px; }
+        .example { font-size: 0.85em; color: #27ae60; font-style: italic; margin-top: 2px; }
+        
+        .polish-btn {
+            display: block;
+            width: 100%;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+            transition: background 0.2s;
+        }
+        .polish-btn:hover { background: #27ae60; }
+        
+        .output-box {
+            margin-top: 25px;
+            background: #fff9e6;
+            border: 2px dashed #f1c40f;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .output-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #2c3e50;
+            background: white;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 60px;
+        }
+        .word-count {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #7f8c8d;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 The Advice Builder App</h1>
+    
+    <div class="welcome-box">
+        <strong>🌟 Welcome! Let's Write an Advice Paragraph!</strong><br>
+        <strong>Meet Sam:</strong> Sam is feeling very stressed about upcoming exams and cannot sleep. Let’s write a paragraph to give Sam some good advice!
+    </div>
+
+    <div class="step">
+        <div class="step-title">🧭 Step 1: Give Your Advice (Sentence 1)</div>
+        <p class="hint">Instructions: Choose one phrase below, then type your action to finish the sentence.</p>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectStarter(1, 'You should')">You should...</button>
+            <button class="option-btn" onclick="selectStarter(1, 'You could')">You could...</button>
+            <button class="option-btn" onclick="selectStarter(1, 'You ought to')">You ought to...</button>
+            <button class="option-btn" onclick="selectStarter(1, 'You\'d better')">You'd better...</button>
+            <button class="option-btn" onclick="selectStarter(1, 'Why don\'t you')">Why don't you...</button>
+            <button class="option-btn" onclick="selectStarter(1, 'Why not')">Why not...</button>
+        </div>
+        
+        <div style="display: flex; gap: 5px; align-items: center;">
+            <span id="starter1-display" style="font-weight: bold; color: #3498db; white-space: nowrap;">[Choose phrase]</span>
+            <input type="text" id="input1" placeholder="e.g., talk to your teacher / listen to music">
+        </div>
+        <p class="example">💡 Example: You should talk to your teacher.</p>
+    </div>
+
+    <div class="step">
+        <div class="step-title">🧭 Step 2: Explain Why (Sentence 2)</div>
+        <p class="hint">Instructions: Answer these simple questions in your mind to type your reason.</p>
+        <ul class="hint" style="margin-bottom: 10px; padding-left: 20px;">
+            <li>Why should Sam do this?</li>
+            <li>How can it help Sam?</li>
+        </ul>
+        <textarea id="input2" rows="2" placeholder="e.g., This is because your teacher can give you extra help."></textarea>
+        <p class="example">💡 Example: This is because your teacher can give you extra help.</p>
+    </div>
+
+    <div class="step">
+        <div class="step-title">🧭 Step 3: Give an Example (Sentence 3)</div>
+        <p class="hint">Instructions: Make your advice stronger. Choose a starter and type a real-life example.</p>
+        
+        <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+            <button class="option-btn" onclick="selectStarter(3, 'To give a concrete example,')">To give a concrete example, ...</button>
+            <button class="option-btn" onclick="selectStarter(3, 'For instance,')">For instance, ...</button>
+        </div>
+        
+        <div style="display: flex; gap: 5px; align-items: center;">
+            <span id="starter3-display" style="font-weight: bold; color: #3498db; white-space: nowrap;">[Choose phrase]</span>
+            <input type="text" id="input3" placeholder="e.g., you can ask them questions during the recess.">
+        </div>
+        <p class="example">💡 Example: For instance, you can ask them questions during the recess.</p>
+    </div>
+
+    <button class="polish-btn" onclick="polishParagraph()">🚀 Polish the Paragraph</button>
+
+    <div class="output-box" id="outputBox">
+        <h3 style="margin-top: 0; color: #d35400;">🖥️ Student's Polished Output Box</h3>
+        <p style="margin-bottom: 5px; font-weight: bold;">Your Final Paragraph:</p>
+        <div class="output-text" id="finalParagraph"></div>
+        <div class="word-count" id="wordCountDisplay">📊 Total Word Count: 0 words.</div>
+    </div>
+</div>
+
+<script>
+    let selectedStarter1 = "";
+    let selectedStarter3 = "";
+
+    function selectStarter(step, text) {
+        // Clear previous selection styling in the correct row
+        const indexOffset = step === 1 ? 0 : 6;
+        const buttons = document.querySelectorAll('.option-btn');
+        const limit = step === 1 ? 6 : 8;
+        for(let i = indexOffset; i < limit; i++) {
+            buttons[i].classList.remove('selected');
+        }
+        
+        // Highlight chosen button
+        event.target.classList.add('selected');
+
+        if(step === 1) {
+            selectedStarter1 = text;
+            document.getElementById('starter1-display').innerText = text + " ";
+        } else if(step === 3) {
+            selectedStarter3 = text;
+            document.getElementById('starter3-display').innerText = text + " ";
+        }
+    }
+
+    function cleanGrammar(text) {
+        if (!text) return "";
+        let clean = text.trim();
+        
+        // Fix double punctuation and lowercase starts
+        clean = clean.replace(/^[a-z]/, match => match.toUpperCase());
+        
+        // Grammar fixing rules tailored for weak F.1 Hong Kong students:
+        // 1. Fix modal verb issues common in L1 interference
+        clean = clean.replace(/\b(should|could|would|can|will|must|ought to|had better|'d better) +([a-z]+)ing\b/gi, "$1 $2"); // should talking -> should talk
+        clean = clean.replace(/\b(should|could|would|can|will|must|ought to|had better|'d better) +([a-z]+)s\b/gi, "$1 $2");   // can helps -> can help
+        clean = clean.replace(/\b(should|could|would|can|will|must|ought to|had better|'d better) +to +([a-z]+)\b/gi, "$1 $2"); // can to help -> can help (except ought to)
+        
+        // Fix 'ought to' exception handling if broken by previous line
+        clean = clean.replace(/ought +([a-z]+)/gi, "ought to $1");
+
+        // 2. Fix simple Subject-Verb agreement common mistakes
+        clean = clean.replace(/\bthis +are\b/gi, "this is");
+        clean = clean.replace(/\bthis +is +because +([a-z\s]+) +can +([a-z]+)s\b/gi, "this is because $1 can $2");
+        
+        // Ensure sentence ends with a period if missing
+        if (!/[.!?]$/.test(clean)) {
+            clean += ".";
+        }
+        return clean;
+    }
+
+    function polishParagraph() {
+        let s1Body = document.getElementById('input1').value.trim();
+        let s2Body = document.getElementById('input2').value.trim();
+        let s3Body = document.getElementById('input3').value.trim();
+
+        // Fallbacks if starters aren't explicitly chosen
+        let start1 = selectedStarter1 ? selectedStarter1 + " " : "You should ";
+        let start3 = selectedStarter3 ? selectedStarter3 + " " : "For instance, ";
+
+        // Construct raw sentences
+        let sentence1 = start1 + s1Body;
+        let sentence2 = s2Body;
+        let sentence3 = start3 + s3Body;
+
+        // Apply native proofreading functions
+        let clean1 = cleanGrammar(sentence1);
+        let clean2 = cleanGrammar(sentence2);
+        let clean3 = cleanGrammar(sentence3);
+
+        // Stitch together
+        let fullParagraph = `${clean1} ${clean2} ${clean3}`.trim();
+        
+        // Clean double spaces
+        fullParagraph = fullParagraph.replace(/\s+/g, ' ');
+
+        // Count words
+        let wordCount = fullParagraph ? fullParagraph.split(/\s+/).length : 0;
+
+        // Display results
+        document.getElementById('finalParagraph').innerText = `"${fullParagraph}"`;
+        document.getElementById('wordCountDisplay').innerText = `📊 Total Word Count: ${wordCount} words.`;
+        document.getElementById('outputBox').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
