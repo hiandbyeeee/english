@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F.1 Vocabulary Flashcards: Travel & Culture</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --secondary: #2c3e50;
+            --bg: #f5f7fa;
+            --card-front: #ffffff;
+            --card-back: #e8f4fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+
+        p.subtitle {
+            color: #7f8c8d;
+            margin-top: 0;
+            font-size: 16px;
+        }
+
+        /* App Layout */
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Flashcard Container */
+        .flashcard-wrapper {
+            width: 100%;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and Back Styling */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 25px;
+            background: white;
+        }
+
+        .card-front {
+            background-color: var(--card-front);
+            justify-content: space-between;
+        }
+
+        .card-back {
+            background-color: var(--card-back);
+            transform: rotateY(180deg);
+            justify-content: center;
+            border: 3px dashed var(--primary);
+        }
+
+        /* Audio Button */
+        .audio-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .audio-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Image Placeholder / Visual Container */
+        .image-container {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f3f6;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-top: 25px;
+        }
+
+        .image-emoji {
+            font-size: 80px;
+        }
+
+        /* Typography */
+        .word-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 15px 0 5px 0;
+            text-align: center;
+        }
+
+        .phonetic {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .chinese-text {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .explanation-text {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 10px;
+        }
+
+        /* Navigation Buttons */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .progress {
+            font-size: 16px;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎒 Travel & Culture Flashcards</h1>
+    <p class="subtitle">Form 1 Vocabulary Builder</p>
+</header>
+
+<div class="app-container">
+    <div class="flashcard-wrapper" onclick="flipCard()">
+        <div class="flashcard" id="card">
+            
+            <div class="card-face card-front">
+                <button class="audio-btn" onclick="speakWord(event)" title="Listen to pronunciation">🔊</button>
+                
+                <div class="image-container">
+                    <div class="image-emoji" id="card-emoji">🏛️</div>
+                </div>
+                
+                <div style="text-align: center; width: 100%;">
+                    <div class="word-text" id="card-word">cultural heritage</div>
+                    <div class="phonetic" id="card-phonetic">/ˈkʌl.tʃər.əl ˈher.ɪ.tɪdʒ/</div>
+                </div>
+                
+                <div class="hint-text">💡 Tap card to see Chinese meaning</div>
+            </div>
+            
+            <div class="card-face card-back">
+                <div class="chinese-text" id="card-chinese">文化遺產</div>
+                <div class="explanation-text" id="card-explanation">The history, traditions, and buildings that belong to a culture.</div>
+                <div class="hint-text" style="position: absolute; bottom: 25px;">💡 Tap to see English word again</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prev-btn" onclick="prevCard()">Previous</button>
+        <span class="progress" id="progress-text">1 / 25</span>
+        <button class="btn" id="next-btn" onclick="nextCard()">Next</button>
+    </div>
+</div>
+
+<script>
+    // Comprehensive vocabulary data list
+    const vocabData = [
+        { word: "cultural heritage", phonetic: "/ˈkʌl.tʃər.əl ˈher.ɪ.tɪdʒ/", chinese: "文化遺產", emoji: "🏛️", exp: "The history, traditions, and historical buildings belonging to a culture." },
+        { word: "custom", phonetic: "/ˈkʌs.təm/", chinese: "傳統習俗 / 風俗", emoji: "🤝", exp: "An action or way of behaving that has been traditional for a long time." },
+        { word: "destination", phonetic: "/ˌdes.tɪˈneɪ.ʃən/", chinese: "目的地", emoji: "📍", exp: "The place where someone is going or where something is being sent." },
+        { word: "travel brochure", phonetic: "/ˈtræv.əl ˈbrəʊ.ʃər/", chinese: "旅遊特刊 / 小冊子", emoji: "📖", exp: "A small book or magazine containing pictures and information about a holiday." },
+        { word: "passport", phonetic: "/ˈpɑːs.pɔːt/", chinese: "護照", emoji: "🛂", exp: "An official document used for traveling to other countries." },
+        { word: "luggage / baggage", phonetic: "/ˈlʌɡ.ɪdʒ / ˈbæɡ.ɪdʒ/", chinese: "行李", emoji: "🧳", exp: "Bags and cases that you take with you when you travel." },
+        { word: "vacation", phonetic: "/veɪˈkeɪ.ʃən/", chinese: "假期", emoji: "🏖️", exp: "A period of time when you are free from work or school to rest." },
+        { word: "itinerary", phonetic: "/aɪˈtɪn.ər.ər.i/", chinese: "行程表", emoji: "🗺️", exp: "A detailed plan or route for a journey or trip." },
+        { word: "excursion", phonetic: "/ɪkˈskɜː.ʃən/", chinese: "（短途）旅行 / 遠足", emoji: "🚌", exp: "A short trip, especially one taken for pleasure by a group of people." },
+        { word: "landscape", phonetic: "/ˈlænd.skeɪp/", chinese: "風景 / 自然景色", emoji: "🏔️", exp: "A large area of countryside, especially one that is beautiful to look at." },
+        { word: "vibrant", phonetic: "/ˈvaɪ.brənt/", chinese: "充滿生氣的 / 精采的", emoji: "✨", exp: "Full of energy, life, and bright colors." },
+        { word: "landmark", phonetic: "/ˈlænd.mɑːk/", chinese: "地標", emoji: "🗼", exp: "A famous building or object that you can see and recognize easily." },
+        { word: "tourist spot", phonetic: "/ˈtʊə.rɪst spɒt/", chinese: "旅遊景點", emoji: "📸", exp: "A popular place that many tourists visit." },
+        { word: "capital", phonetic: "/ˈkæp.ɪ.təl/", chinese: "首都", emoji: "👑", exp: "The city where the government of a country or state is located." },
+        { word: "nightlife", phonetic: "/ˈnaɪt.laɪf/", chinese: "夜生活", emoji: "🌃", exp: "Entertainment and activities available in the evening or night." },
+        { word: "overcrowded", phonetic: "/ˌəʊ.vəˈkraʊ.dɪd/", chinese: "擠滿的 / 擠迫的", emoji: "👥", exp: "Containing too many people or things." },
+        { word: "accommodation", phonetic: "/əˌkɒm.əˈdeɪ.ʃən/", chinese: "住宿", emoji: "🏨", exp: "A place to live, stay, or sleep in, such as a hotel room." },
+        { word: "infrastructure", phonetic: "/ˈɪn.frəˌstrʌk.tʃər/", chinese: "基礎建設", emoji: "🚊", exp: "The basic systems like roads, railways, and bridges of a country." },
+        { word: "scenery", phonetic: "/ˈsiː.nər.i/", chinese: "風景 / 風光", emoji: "🏞️", exp: "The general appearance of natural surroundings like mountains, valleys, and rivers." },
+        { word: "spectacular", phonetic: "/spekˈtæk.jə.lər/", chinese: "壯觀的 / 驚人的", emoji: "🤩", exp: "Very exciting, beautiful, or impressive to look at." },
+        { word: "the Forbidden City", phonetic: "/ðə fəˈbɪd.ən ˈsɪt.i/", chinese: "紫禁城 / 故宮", emoji: "🏮", exp: "A famous palace complex in Beijing, China." },
+        { word: "Mount Fuji", phonetic: "/maʊnt ˈfuː.dʒi/", chinese: "富士山", emoji: "🗻", exp: "The highest, famous volcanic mountain located in Japan." },
+        { word: "Sydney Opera House", phonetic: "/ˈsɪd.ni ˈɒp.ər.ə haʊs/", chinese: "悉尼歌劇院", emoji: "🇦🇺", exp: "A multi-venue performing arts centre in Sydney, Australia." },
+        { word: "Statue of Liberty", phonetic: "/ˈstætʃ.uː əv ˈlɪb.ə.ti/", chinese: "自由神像", emoji: "🗽", exp: "A large copper statue on Liberty Island in New York harbor." },
+        { word: "Eiffel Tower", phonetic: "/ˈaɪ.fəl ˈtaʊ.ər/", chinese: "埃菲爾鐵塔 / 巴黎鐵塔", emoji: "🗼", exp: "A famous landmark iron tower located in Paris, France." }
+    ];
+
+    let currentIndex = 0;
+    const cardEl = document.getElementById('card');
+
+    // Display current card details
+    function updateCard() {
+        const item = vocabData[currentIndex];
+        
+        // Front elements
+        document.getElementById('card-word').textContent = item.word;
+        document.getElementById('card-phonetic').textContent = item.phonetic;
+        document.getElementById('card-emoji').textContent = item.emoji;
+        
+        // Back elements
+        document.getElementById('card-chinese').textContent = item.chinese;
+        document.getElementById('card-explanation').textContent = item.exp;
+        
+        // Progress text
+        document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${vocabData.length}`;
+        
+        // Disable buttons if at extreme boundaries
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').disabled = currentIndex === vocabData.length - 1;
+    }
+
+    // Toggle card flip
+    function flipCard() {
+        cardEl.classList.toggle('flipped');
+    }
+
+    // Advance to next card
+    function nextCard() {
+        if (currentIndex < vocabData.length - 1) {
+            cardEl.classList.remove('flipped');
+            // Wait for flip transition to reset before changing content
+            setTimeout(() => {
+                currentIndex++;
+                updateCard();
+            }, 150);
+        }
+    }
+
+    // Go to previous card
+    function prevCard() {
+        if (currentIndex > 0) {
+            cardEl.classList.remove('flipped');
+            setTimeout(() => {
+                currentIndex--;
+                updateCard();
+            }, 150);
+        }
+    }
+
+    // Text-to-Speech Pronunciation engine
+    function speakWord(event) {
+        // Stop the card from flipping when clicking the speaker icon
+        event.stopPropagation();
+        
+        const currentWord = vocabData[currentIndex].word;
+        
+        // Check browser support
+        if ('speechSynthesis' in window) {
+            // Cancel any ongoing speech instantly
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(currentWord);
+            
+            // Explicit configuration optimized for lower-ability/struggling F.1 learners
+            utterance.lang = 'en-US'; // Uses standard global English engine
+            utterance.rate = 0.75;    // Reduced speed so students can clear distinguish syllables
+            utterance.pitch = 1.0;   // Clean, natural vocal register
+            
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Sorry, your current browser does not support audio speech features.");
+        }
+    }
+
+    // Initial load
+    updateCard();
+</script>
+
+</body>
+</html>
